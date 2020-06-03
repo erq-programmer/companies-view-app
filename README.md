@@ -17,7 +17,8 @@ Application is fetch and display table of companies with several additional opti
 
 ## Features
 
-- ...
+- Table with: id, name, city and total income
+- Filter the result by name
 
 ## Status
 
