@@ -2,7 +2,7 @@
 
 Application is fetch and display table of companies with several additional options 💪💪.
 
-## [DEMO](https://bryzol-webpage.netlify.com/)
+## [DEMO](https://companies-view-app.netlify.app/)
 
 ## Screenshots
 
