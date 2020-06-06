@@ -1,9 +1,11 @@
 /* eslint-disable no-console */
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import GlobalStyle from 'theme/GlobalStyle';
-import Table from 'components/Table/Table';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import DetailsView from 'views/DetailsView/DetailsView';
+import TableView from 'views/TableView/TableView';
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,33 +18,9 @@ const MainHeading = styled.h1`
   font-size: 3.6rem;
 `;
 
-const App = () => {
-  const columns = [
-    {
-      Header: 'Companies',
-      columns: [
-        {
-          Header: 'ID',
-          accessor: 'id',
-        },
-        {
-          Header: 'Name',
-          accessor: 'name',
-        },
-        {
-          Header: 'City',
-          accessor: 'city',
-        },
-        {
-          Header: 'Total income',
-          accessor: 'totalIncome',
-        },
-      ],
-    },
-  ];
-
+const Root = () => {
   const [companiesData, setCompaniesData] = useState([]);
-  const [filterInput, setFilterInput] = useState('');
+
   const [isLoading, setLoading] = useState(true);
 
   const fetchCompaniesData = useCallback(async () => {
@@ -98,42 +76,20 @@ const App = () => {
     fetchData();
   }, [fetchData]);
 
-  const handleTyping = useCallback((e) => {
-    setFilterInput(e.target.value);
-  }, []);
-
-  const filteredCompanyByName = useMemo(
-    () =>
-      companiesData.filter((company) => {
-        return company.name.toLowerCase().includes(filterInput.toLowerCase());
-      }),
-    [companiesData, filterInput],
-  );
-
   return (
-    <Wrapper>
-      <GlobalStyle />
-      <MainHeading>Companies View App</MainHeading>
-      <div>
-        <input
-          onKeyPress={(event) => {
-            if (event.which === 13 /* Enter */) {
-              event.preventDefault();
-            }
-          }}
-          type="text"
-          placeholder="Filter by name..."
-          onChange={handleTyping}
-          value={filterInput}
-        />
-      </div>
-      {isLoading ? (
-        <span>Loading...</span>
-      ) : (
-        <Table columns={columns} data={filteredCompanyByName} />
-      )}
-    </Wrapper>
+    <Router>
+      <Wrapper>
+        <GlobalStyle />
+        <MainHeading>Companies View App</MainHeading>
+        <Switch>
+          <Route exact path="/">
+            <TableView companiesData={companiesData} isLoading={isLoading} />
+          </Route>
+          <Route path="/details" component={DetailsView} />
+        </Switch>
+      </Wrapper>
+    </Router>
   );
 };
 
-export default App;
+export default Root;
