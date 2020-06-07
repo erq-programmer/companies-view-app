@@ -85,7 +85,9 @@ const Root = () => {
           <Route exact path="/">
             <TableView companiesData={companiesData} isLoading={isLoading} />
           </Route>
-          <Route path="/details" component={DetailsView} />
+          <Route path="/details">
+            <DetailsView companiesData={companiesData} isLoading={isLoading} />
+          </Route>
         </Switch>
       </Wrapper>
     </Router>

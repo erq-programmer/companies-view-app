@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import styled from 'styled-components';
 import GlobalStyle from 'theme/GlobalStyle';
@@ -10,17 +10,44 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const MainHeading = styled.h1`
-  padding: 20px;
-  font-size: 3.6rem;
-`;
+const DetailsView = ({ companiesData, isLoading }) => {
+  const getDetailsId = () => {
+    const re = /details/g;
 
-const DetailsView = () => {
+    const startIndex = re.exec(document.URL);
+
+    const result = document.URL.slice(startIndex.index + 8);
+
+    return parseInt(result, 10);
+  };
+
+  const getCompanyDataFromId = (id) => {
+    return companiesData.filter((company) => {
+      return company.id === id;
+    });
+  };
+
+  const company = getCompanyDataFromId(getDetailsId());
+
   return (
     <Wrapper>
       <GlobalStyle />
-      <MainHeading>Details View</MainHeading>
       <Link to="/">Back</Link>
+      {isLoading ? (
+        <span>Loading...</span>
+      ) : (
+        <section>
+          <ul>
+            {console.log(company)}
+            <li>ID: {company[0].id}</li>
+            <li>Name: {company[0].name}</li>
+            <li>City: {company[0].city}</li>
+            <li>Total income: {company[0].totalIncome}</li>
+            <li>Average income: </li>
+            <li>Last month income: </li>
+          </ul>
+        </section>
+      )}
     </Wrapper>
   );
 };

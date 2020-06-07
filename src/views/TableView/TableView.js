@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useCallback, useMemo } from 'react';
 import Table from 'components/Table/Table';
+import { Link } from 'react-router-dom';
 
 const columns = [
   {
@@ -9,6 +10,9 @@ const columns = [
       {
         Header: 'ID',
         accessor: 'id',
+        Cell: (accessor) => (
+          <Link to={{ pathname: `/details/${accessor.cell.value}` }}>{accessor.cell.value}</Link>
+        ),
       },
       {
         Header: 'Name',
