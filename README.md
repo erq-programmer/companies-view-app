@@ -1,12 +1,12 @@
-# Companies View App
+# Companies View App [![Netlify Status](https://api.netlify.com/api/v1/badges/51ce470b-2441-451b-8669-b3ae339755bc/deploy-status)](https://app.netlify.com/sites/companies-view-app/deploys)
 
 Application is fetch and display table of companies with several additional options 💪💪.
 
-## [DEMO](https://companies-view-app.netlify.app/) [![Netlify Status](https://api.netlify.com/api/v1/badges/51ce470b-2441-451b-8669-b3ae339755bc/deploy-status)](https://app.netlify.com/sites/companies-view-app/deploys)
+## [DEMO](https://companies-view-app.netlify.app/) 
 
 ## Screenshots
 
-![Companies View App screenshot](src/assets/images/screenshot.png)
+![Companies View App screenshot](src/assets/screenshot.png)
 
 ## Technologies
 
