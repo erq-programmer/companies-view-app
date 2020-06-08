@@ -8,8 +8,12 @@ import { useTable, usePagination } from 'react-table';
 import styled from 'styled-components';
 
 const TableStyles = styled.section`
-  padding: 2rem;
+  padding: 2rem 0;
   width: 100%;
+
+  @media (min-width: 530px) {
+    padding: 2rem;
+  }
 
   table {
     border-spacing: 0;
@@ -58,9 +62,21 @@ const Pagination = styled.div`
   justify-content: center;
 
   button {
+    text-decoration: none;
+    border: none;
+    background-color: #f2f2f2;
+    border-radius: 6px;
+    font-weight: 700;
+    color: #222;
+    transition: 0.3s ease all;
     padding: 5px 10px;
     margin: 0 5px;
     cursor: pointer;
+
+    &:hover {
+      background-color: #3252e9;
+      color: #f2f2f2;
+    }
   }
 
   span {
