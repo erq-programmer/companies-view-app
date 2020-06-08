@@ -1,55 +1,109 @@
-/* eslint-disable react/prop-types */
-import React from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useState, useCallback } from 'react';
+// import styled from 'styled-components';
 import GlobalStyle from 'theme/GlobalStyle';
+import axios from 'axios';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+const DetailsView = ({ match }) => {
+  const [companiesData, setCompaniesData] = useState([]);
 
-const DetailsView = ({ companiesData, isLoading }) => {
-  const getDetailsId = () => {
-    const re = /details/g;
+  const [isLoading, setLoading] = useState(true);
 
-    const startIndex = re.exec(document.URL);
+  const fetchCompaniesData = useCallback(async () => {
+    try {
+      const response = await axios.get('https://recruitment.hal.skygate.io/companies');
+      return response.data;
+    } catch (e) {
+      console.error(`😱 Something went wrong with axios... [Error message] ${e.message}`);
+      return [];
+    }
+  }, []);
 
-    const result = document.URL.slice(startIndex.index + 8);
+  const fetchIncomesData = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `https://recruitment.hal.skygate.io/incomes/${match.params.id}`,
+      );
+      return response.data.incomes;
+    } catch (e) {
+      console.error(`😱 Something went wrong with axios... [Error message] ${e.message}`);
+      return [];
+    }
+  }, [match.params.id]);
 
-    return parseInt(result, 10);
-  };
+  const fetchData = useCallback(async () => {
+    try {
+      const companies = await fetchCompaniesData();
+      const currentCompany = companies.filter((company) => {
+        return company.id === parseInt(match.params.id, 10);
+      });
+      const incomes = await fetchIncomesData();
 
-  const getCompanyDataFromId = (id) => {
-    return companiesData.filter((company) => {
-      return company.id === id;
-    });
-  };
+      incomes.sort((a, b) => {
+        if (a.date > b.date) return 1;
+        if (b.date > a.date) return -1;
+        return 0;
+      });
 
-  const company = getCompanyDataFromId(getDetailsId());
+      const lastIncomeMonthNumber = new Date(incomes[incomes.length - 1].date).getMonth();
+      const lastIncomeYearNumber = new Date(incomes[incomes.length - 1].date).getFullYear();
+      const lastIncomeMonth = incomes
+        .filter((item) => {
+          const month = new Date(item.date).getMonth();
+          const year = new Date(item.date).getFullYear();
+          return month === lastIncomeMonthNumber && year === lastIncomeYearNumber;
+        })
+        .reduce((accumulator, currentValue) => accumulator + parseInt(currentValue.value, 10), 0);
+      const totalIncome = incomes.reduce(
+        (previous, current) => previous + parseInt(current.value, 10),
+        0,
+      );
+      const averageIncome = totalIncome / incomes.length;
+      const currentCompanyWithIncomes = {
+        ...currentCompany[0],
+        incomes,
+        lastIncomeMonth,
+        totalIncome,
+        averageIncome,
+      };
+      setCompaniesData(currentCompanyWithIncomes);
+      setLoading(false);
+    } catch (e) {
+      console.error(`😱 Something went wrong with axios... [Error message] ${e.message}`);
+      setLoading(true);
+    }
+  }, [fetchCompaniesData, fetchIncomesData, match.params.id]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
-    <Wrapper>
+    <div>
       <GlobalStyle />
       <Link to="/">Back</Link>
+
       {isLoading ? (
         <span>Loading...</span>
       ) : (
         <section>
           <ul>
-            {console.log(company)}
-            <li>ID: {company[0].id}</li>
-            <li>Name: {company[0].name}</li>
-            <li>City: {company[0].city}</li>
-            <li>Total income: {company[0].totalIncome}</li>
-            <li>Average income: </li>
-            <li>Last month income: </li>
+            <li>ID: {companiesData.id}</li>
+            <li>Name: {companiesData.name}</li>
+            <li>City: {companiesData.city}</li>
+            <li>Total income: {companiesData.totalIncome}</li>
+            <li>Average income: {companiesData.averageIncome}</li>
+            <li>Last month income: {companiesData.lastIncomeMonth}</li>
           </ul>
         </section>
       )}
-    </Wrapper>
+    </div>
   );
+};
+
+DetailsView.propTypes = {
+  match: PropTypes.object.isRequired,
 };
 
 export default DetailsView;

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -9,13 +8,19 @@ import TableView from 'views/TableView/TableView';
 
 const Wrapper = styled.div`
   display: flex;
+  width: 100%;
+  min-height: 100vh;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 `;
 
 const MainHeading = styled.h1`
   padding: 20px;
+  text-align: center;
   font-size: 3.6rem;
+  font-weight: 700;
+  color: #f2f2f2;
 `;
 
 const Root = () => {
@@ -85,9 +90,7 @@ const Root = () => {
           <Route exact path="/">
             <TableView companiesData={companiesData} isLoading={isLoading} />
           </Route>
-          <Route path="/details">
-            <DetailsView companiesData={companiesData} isLoading={isLoading} />
-          </Route>
+          <Route path="/details/:id" render={({ match }) => <DetailsView match={match} />} />
         </Switch>
       </Wrapper>
     </Router>

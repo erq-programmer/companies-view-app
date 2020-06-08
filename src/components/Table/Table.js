@@ -8,11 +8,14 @@ import { useTable, usePagination } from 'react-table';
 import styled from 'styled-components';
 
 const TableStyles = styled.section`
-  padding: 1rem;
+  padding: 2rem;
+  width: 100%;
 
   table {
     border-spacing: 0;
-    border: 1px solid black;
+    border: 0;
+    box-shadow: 10px 10px 26px 0px rgba(0, 0, 0, 0.28);
+    width: 100%;
 
     tr {
       :last-child {
@@ -25,17 +28,57 @@ const TableStyles = styled.section`
     th,
     td {
       margin: 0;
-      padding: 0.5rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
+      padding: 1rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      background-color: white;
+
+      :first-child {
+        text-align: center;
+      }
 
       :last-child {
         border-right: 0;
+        text-align: center;
       }
     }
+
+    th {
+      font-size: 2rem;
+      font-weight: 700;
+    }
   }
-  .pagination {
-    padding: 0.5rem;
+`;
+
+const Pagination = styled.div`
+  padding: 2rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+
+  span {
+    margin: 0 20px;
+    color: #f2f2f2;
+
+    strong {
+      font-weight: 700;
+    }
+  }
+
+  select {
+    cursor: pointer;
+    padding: 5px 10px;
+
+    option {
+      cursor: pointer;
+    }
   }
 `;
 
@@ -45,10 +88,7 @@ const Table = ({ columns, data }) => {
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    page, // Instead of using 'rows', we'll use page,
-    // which has only the rows for the active page
-
-    // The rest of these things are super handy, too ;)
+    page,
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -92,28 +132,22 @@ const Table = ({ columns, data }) => {
           })}
         </tbody>
       </table>
-      {/* 
-        Pagination can be built however you'd like. 
-        This is just a very basic UI implementation:
-      */}
-      <div className="pagination">
+      <Pagination>
         <button type="button" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
-        </button>{' '}
+        </button>
         <button type="button" onClick={() => previousPage()} disabled={!canPreviousPage}>
           {'<'}
-        </button>{' '}
+        </button>
         <button type="button" onClick={() => nextPage()} disabled={!canNextPage}>
           {'>'}
-        </button>{' '}
+        </button>
         <button type="button" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
           {'>>'}
-        </button>{' '}
+        </button>
         <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
+          Page
+          <strong> {pageIndex + 1} </strong> of <strong>{pageOptions.length}</strong>
         </span>
         <select
           value={pageSize}
@@ -127,7 +161,7 @@ const Table = ({ columns, data }) => {
             </option>
           ))}
         </select>
-      </div>
+      </Pagination>
     </TableStyles>
   );
 };

@@ -1,7 +1,25 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useCallback, useMemo } from 'react';
+import styled from 'styled-components';
 import Table from 'components/Table/Table';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const FilterInput = styled.input`
+  padding: 10px 20px;
+  font-size: 1.4rem;
+  width: 100%;
+  max-width: 600px;
+  border: none;
+  background-color: #f2f2f2;
+`;
 
 const columns = [
   {
@@ -47,26 +65,31 @@ const TableView = ({ companiesData, isLoading }) => {
 
   return (
     <>
-      <div>
-        <input
-          onKeyPress={(event) => {
-            if (event.which === 13 /* Enter */) {
-              event.preventDefault();
-            }
-          }}
-          type="text"
-          placeholder="Filter by name..."
-          onChange={handleTyping}
-          value={filterInput}
-        />
-      </div>
       {isLoading ? (
         <span>Loading...</span>
       ) : (
-        <Table columns={columns} data={filteredCompanyByName} />
+        <Container>
+          <FilterInput
+            onKeyPress={(event) => {
+              if (event.which === 13) {
+                event.preventDefault();
+              }
+            }}
+            type="text"
+            placeholder="Filter by name..."
+            onChange={handleTyping}
+            value={filterInput}
+          />
+          <Table columns={columns} data={filteredCompanyByName} />
+        </Container>
       )}
     </>
   );
+};
+
+TableView.propTypes = {
+  companiesData: PropTypes.array.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };
 
 export default TableView;

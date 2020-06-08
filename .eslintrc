@@ -7,7 +7,9 @@
     "document": true
   },
   "rules": {
-    "react/jsx-filename-extension": [1, { "extensions": [".js"] }]
+    "react/jsx-filename-extension": [1, { "extensions": [".js"] }],
+    "no-console": "off",
+    "react/forbid-prop-types": "off"
   },
   "settings": {
     "import/resolver": {
